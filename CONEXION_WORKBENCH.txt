@@ -1,0 +1,33 @@
+# 🔧 Configuración MySQL Workbench para Railway
+# Copia estos datos desde tu Railway Dashboard
+
+# 1. Crear Nueva Conexión en MySQL Workbench
+# Clic en "+" junto a "MySQL Connections"
+
+# 2. Configuración de Conexión:
+Connection Name: Railway ElectroniStock
+Connection Method: Standard (TCP/IP)
+
+# 3. Parámetros de Conexión (reemplazar con tus datos de Railway):
+Hostname: autorack.proxy.rlwy.net          # MYSQL_HOST
+Port: 12345                                # MYSQL_PORT  
+Username: root                             # MYSQL_USER
+Password: AbCdEfGhIjKlMnOp                # MYSQL_PASSWORD
+Default Schema: railway                    # MYSQL_DATABASE
+
+# 4. Configuración SSL (opcional):
+SSL: No
+
+# 5. Test Connection para verificar
+# Clic en "Test Connection"
+
+# 6. Una vez conectado:
+# - Ejecutar el archivo EJECUTAR_EN_RAILWAY.sql
+# - Verificar que se crearon las tablas
+# - Confirmar que se insertaron los datos
+
+# 📝 Notas:
+# - Los datos exactos están en tu Railway Dashboard → MySQL → Connect
+# - El hostname suele ser: autorack.proxy.rlwy.net o similar
+# - El puerto es diferente para cada proyecto
+# - La contraseña es generada automáticamente por Railway

@@ -14,26 +14,29 @@ app.secret_key = os.getenv('SECRET_KEY', 'tu_clave_secreta_aqui')
 
 # Configuración de la base de datos
 db_config = {
-    'host': os.getenv('DB_HOST', 'localhost'),
-    'database': os.getenv('DB_NAME', 'componentes_electronicos'),
-    'user': os.getenv('DB_USER', 'root'),
-    'password': os.getenv('DB_PASSWORD', 'gus03tavo'),
-    'port': os.getenv('DB_PORT', 3306)
+    'host': os.getenv('MYSQLHOST', os.getenv('DB_HOST', 'localhost')),
+    'database': os.getenv('MYSQLDATABASE', os.getenv('DB_NAME', 'componentes_electronicos')),
+    'user': os.getenv('MYSQLUSER', os.getenv('DB_USER', 'root')),
+    'password': os.getenv('MYSQLPASSWORD', os.getenv('DB_PASSWORD', 'gus03tavo')),
+    'port': int(os.getenv('MYSQLPORT', os.getenv('DB_PORT', 3306)))
 }
 
 
 class DatabaseConnection:
     def __init__(self):
         self.connection = None
-
+    
     def connect(self):
         try:
+            print(f"Intentando conectar a: {db_config['host']}:{db_config['port']}")
             self.connection = mysql.connector.connect(**db_config)
+            print("✅ Conexión exitosa a MySQL")
             return True
         except Error as e:
-            print(f"Error al conectar a MySQL: {e}")
+            print(f"❌ Error al conectar a MySQL: {e}")
+            print(f"Configuración: {db_config}")
             return False
-
+    
     def disconnect(self):
         if self.connection and self.connection.is_connected():
             self.connection.close()
