@@ -90,15 +90,9 @@
 - [x] Código comentado y documentado
 - [x] API REST básica (/api/componentes)
 
-## 🚀 Cómo Usar el Sistema LOCAL
-
-### 1. Configuración Inicial
-```bash
-"/Users/jmrr/Documents/Trabajos UNAM/5to semestre/BASE DE DATOS/DB-1/.venv/bin/python" run.py
-```
 
 ### 2. Acceso Web
-- URL: `http://localhost:5000`
+- URL: `(https://electronistack.up.railway.app/)`
 - Navegador: Chrome, Firefox, Safari, Edge, Brave
 
 ### 3. Flujo de Uso Típico
