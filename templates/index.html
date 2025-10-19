@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - ElectroniStock{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="jumbotron bg-primary text-white p-5 rounded mb-4">
+            <h1 class="display-4">
+                <i class="fas fa-microchip me-3"></i>
+                ElectroniStock
+            </h1>
+            <p class="lead">Sistema de gestión integral para componentes electrónicos</p>
+            <hr class="my-4 bg-white">
+            <p>Organiza, consulta y gestiona tu inventario de componentes electrónicos de manera eficiente.</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-microchip fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Gestión de Componentes</h5>
+                <p class="card-text">Administra tu inventario de resistencias, capacitores, semiconductores y más.</p>
+                <a href="{{ url_for('listar_componentes') }}" class="btn btn-primary">
+                    <i class="fas fa-list me-1"></i>Ver Componentes
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-tags fa-3x text-success mb-3"></i>
+                <h5 class="card-title">Categorías</h5>
+                <p class="card-text">Organiza tus componentes por categorías para un mejor control.</p>
+                <a href="{{ url_for('listar_categorias') }}" class="btn btn-success">
+                    <i class="fas fa-list me-1"></i>Ver Categorías
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <i class="fas fa-search fa-3x text-info mb-3"></i>
+                <h5 class="card-title">Búsqueda Avanzada</h5>
+                <p class="card-text">Encuentra rápidamente cualquier componente en tu inventario.</p>
+                <a href="{{ url_for('buscar') }}" class="btn btn-info text-white">
+                    <i class="fas fa-search me-1"></i>Buscar
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <h3><i class="fas fa-chart-bar me-2"></i>Acciones Rápidas</h3>
+        <div class="row mt-3">
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-plus-circle text-primary me-2"></i>
+                            Agregar Nuevo Componente
+                        </h5>
+                        <p class="card-text">Añade un nuevo componente a tu inventario.</p>
+                        <a href="{{ url_for('nuevo_componente') }}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>Agregar Componente
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-plus-circle text-success me-2"></i>
+                            Agregar Nueva Categoría
+                        </h5>
+                        <p class="card-text">Crea una nueva categoría para organizar mejor tus componentes.</p>
+                        <a href="{{ url_for('nueva_categoria') }}" class="btn btn-success">
+                            <i class="fas fa-plus me-1"></i>Agregar Categoría
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="fas fa-info-circle text-info me-2"></i>
+                    Características del Sistema
+                </h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Gestión completa de inventario</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Búsqueda avanzada y filtros</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Organización por categorías</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success me-2"></i>Control de stock y precios</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Información detallada de fabricantes</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Interfaz intuitiva y responsiva</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

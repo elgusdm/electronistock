@@ -1,0 +1,25 @@
+# Archivos a ignorar en el deploy
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+.venv/
+venv/
+env/
+ENV/
+
+# Archivos de desarrollo
+.DS_Store
+.vscode/
+*.log
+
+# Base de datos local
+*.db
+*.sqlite3
+
+# Documentación (opcional, puedes incluirla si quieres)
+# README.md
+# INICIO_RAPIDO.md
+# RESUMEN_SISTEMA.md

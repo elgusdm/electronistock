@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Componente - ElectroniStock{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4><i class="fas fa-edit me-2"></i>Editar Componente: {{ componente.nombre }}</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nombre" class="form-label">Nombre del Componente *</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" 
+                                   value="{{ componente.nombre }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="categoria_id" class="form-label">Categoría</label>
+                            <select class="form-select" id="categoria_id" name="categoria_id">
+                                <option value="">Seleccionar categoría</option>
+                                {% for categoria in categorias %}
+                                    <option value="{{ categoria.id }}" 
+                                            {% if categoria.id == componente.categoria_id %}selected{% endif %}>
+                                        {{ categoria.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3" 
+                                  placeholder="Descripción detallada del componente...">{{ componente.descripcion or '' }}</textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fabricante" class="form-label">Fabricante</label>
+                            <input type="text" class="form-control" id="fabricante" name="fabricante" 
+                                   value="{{ componente.fabricante or '' }}"
+                                   placeholder="Ej: Arduino, Vishay, Texas Instruments">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="precio" class="form-label">Precio ($) *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="precio" name="precio" 
+                                       value="{{ componente.precio }}" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="stock" class="form-label">Stock *</label>
+                            <input type="number" class="form-control" id="stock" name="stock" 
+                                   value="{{ componente.stock }}" min="0" required>
+                            <div class="form-text">
+                                Stock actual: 
+                                {% if componente.stock <= 10 %}
+                                    <span class="text-danger">{{ componente.stock }} (Bajo)</span>
+                                {% elif componente.stock <= 50 %}
+                                    <span class="text-warning">{{ componente.stock }} (Medio)</span>
+                                {% else %}
+                                    <span class="text-success">{{ componente.stock }} (Bueno)</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <a href="{{ url_for('ver_componente', componente_id=componente.id) }}" class="btn btn-secondary me-2">
+                                <i class="fas fa-arrow-left me-1"></i>Cancelar
+                            </a>
+                            <a href="{{ url_for('listar_componentes') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-list me-1"></i>Ver Lista
+                            </a>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save me-1"></i>Guardar Cambios
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Información adicional -->
+        <div class="card mt-4">
+            <div class="card-body">
+                <h6><i class="fas fa-info-circle me-2"></i>Información del registro</h6>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="small text-muted mb-0">
+                            <strong>ID:</strong> {{ componente.id }}
+                        </p>
+                        {% if componente.codigo_producto %}
+                        <p class="small text-muted mb-0">
+                            <strong>Código:</strong> {{ componente.codigo_producto }}
+                        </p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        {% if componente.fecha_creacion %}
+                        <p class="small text-muted mb-0">
+                            <strong>Creado:</strong> {{ componente.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}
+                        </p>
+                        {% endif %}
+                        {% if componente.fecha_actualizacion %}
+                        <p class="small text-muted mb-0">
+                            <strong>Actualizado:</strong> {{ componente.fecha_actualizacion.strftime('%d/%m/%Y %H:%M') }}
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
