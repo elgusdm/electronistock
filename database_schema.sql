@@ -29,7 +29,7 @@ CREATE TABLE componentes (
     INDEX idx_categoria (categoria_id)
 );
 
--- Tabla de proveedores (opcional)
+-- Tabla de proveedores 
 CREATE TABLE proveedores (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(255) NOT NULL,

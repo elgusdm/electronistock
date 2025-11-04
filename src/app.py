@@ -25,10 +25,11 @@ db_config = {
 class DatabaseConnection:
     def __init__(self):
         self.connection = None
-    
+
     def connect(self):
         try:
-            print(f"Intentando conectar a: {db_config['host']}:{db_config['port']}")
+            print(
+                f"Intentando conectar a: {db_config['host']}:{db_config['port']}")
             self.connection = mysql.connector.connect(**db_config)
             print("✅ Conexión exitosa a MySQL")
             return True
@@ -36,7 +37,7 @@ class DatabaseConnection:
             print(f"❌ Error al conectar a MySQL: {e}")
             print(f"Configuración: {db_config}")
             return False
-    
+
     def disconnect(self):
         if self.connection and self.connection.is_connected():
             self.connection.close()
