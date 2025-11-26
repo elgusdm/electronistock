@@ -23,6 +23,7 @@
                         <th>Fabricante</th>
                         <th>Precio</th>
                         <th>Stock</th>
+                        <th>Proveedores</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -35,6 +36,13 @@
                             {% if componente.codigo_producto %}
                                 <br><small class="text-muted">{{ componente.codigo_producto }}</small>
                             {% endif %}
+                        </td>
+                        <td>
+                            {% set cnt = componente.proveedores_count if componente.proveedores_count is not none else 0 %}
+                            <span class="badge bg-info text-dark">{{ cnt }}</span>
+                            <a href="{{ url_for('ver_componente', componente_id=componente.id) }}" class="ms-2 btn btn-sm btn-outline-info" title="Ver proveedores">
+                                <i class="fas fa-truck"></i>
+                            </a>
                         </td>
                         <td>
                             {% if componente.categoria_nombre %}

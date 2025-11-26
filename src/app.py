@@ -74,7 +74,8 @@ def index():
 @app.route('/componentes')
 def listar_componentes():
     query = """
-    SELECT c.*, cat.nombre as categoria_nombre 
+    SELECT c.*, cat.nombre as categoria_nombre,
+           (SELECT COUNT(*) FROM componente_proveedor cp WHERE cp.componente_id = c.id) as proveedores_count
     FROM componentes c 
     LEFT JOIN categorias cat ON c.categoria_id = cat.id
     ORDER BY c.nombre
@@ -133,7 +134,8 @@ def ver_componente(componente_id):
         )
 
         # Obtener lista de proveedores disponibles (para vincular)
-        proveedores = db.execute_query("SELECT * FROM proveedores ORDER BY nombre")
+        proveedores = db.execute_query(
+            "SELECT * FROM proveedores ORDER BY nombre")
 
         return render_template('componentes/detalle.html', componente=componente[0], proveedores_comp=proveedores_comp or [], proveedores=proveedores or [])
     else:
@@ -286,7 +288,8 @@ def nuevo_proveedor():
 
 @app.route('/proveedores/<int:proveedor_id>')
 def ver_proveedor(proveedor_id):
-    proveedor = db.execute_query("SELECT * FROM proveedores WHERE id = %s", (proveedor_id,))
+    proveedor = db.execute_query(
+        "SELECT * FROM proveedores WHERE id = %s", (proveedor_id,))
     if not proveedor:
         flash('Proveedor no encontrado', 'error')
         return redirect(url_for('listar_proveedores'))
@@ -324,7 +327,8 @@ def editar_proveedor(proveedor_id):
 
         return redirect(url_for('listar_proveedores'))
 
-    proveedor = db.execute_query("SELECT * FROM proveedores WHERE id = %s", (proveedor_id,))
+    proveedor = db.execute_query(
+        "SELECT * FROM proveedores WHERE id = %s", (proveedor_id,))
     if proveedor:
         return render_template('proveedores/editar.html', proveedor=proveedor[0])
     else:
