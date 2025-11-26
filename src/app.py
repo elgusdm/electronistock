@@ -120,7 +120,22 @@ def ver_componente(componente_id):
     """
     componente = db.execute_query(query, (componente_id,))
     if componente:
-        return render_template('componentes/detalle.html', componente=componente[0])
+        # Obtener proveedores asociados al componente
+        proveedores_comp = db.execute_query(
+            """
+            SELECT p.*, cp.precio_proveedor, cp.tiempo_entrega_dias
+            FROM componente_proveedor cp
+            JOIN proveedores p ON cp.proveedor_id = p.id
+            WHERE cp.componente_id = %s
+            ORDER BY p.nombre
+            """,
+            (componente_id,)
+        )
+
+        # Obtener lista de proveedores disponibles (para vincular)
+        proveedores = db.execute_query("SELECT * FROM proveedores ORDER BY nombre")
+
+        return render_template('componentes/detalle.html', componente=componente[0], proveedores_comp=proveedores_comp or [], proveedores=proveedores or [])
     else:
         flash('Componente no encontrado', 'error')
         return redirect(url_for('listar_componentes'))
@@ -241,6 +256,120 @@ def api_componentes():
     else:
         componentes = db.execute_query("SELECT * FROM componentes")
     return jsonify(componentes or [])
+
+
+@app.route('/proveedores')
+def listar_proveedores():
+    proveedores = db.execute_query("SELECT * FROM proveedores ORDER BY nombre")
+    return render_template('proveedores/lista.html', proveedores=proveedores)
+
+
+@app.route('/proveedores/nuevo', methods=['GET', 'POST'])
+def nuevo_proveedor():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        contacto = request.form.get('contacto')
+        telefono = request.form.get('telefono')
+        email = request.form.get('email')
+        direccion = request.form.get('direccion')
+
+        query = "INSERT INTO proveedores (nombre, contacto, telefono, email, direccion) VALUES (%s, %s, %s, %s, %s)"
+        params = (nombre, contacto, telefono, email, direccion)
+        if db.execute_query(query, params):
+            flash('Proveedor agregado exitosamente', 'success')
+            return redirect(url_for('listar_proveedores'))
+        else:
+            flash('Error al agregar proveedor', 'error')
+
+    return render_template('proveedores/nuevo.html')
+
+
+@app.route('/proveedores/<int:proveedor_id>')
+def ver_proveedor(proveedor_id):
+    proveedor = db.execute_query("SELECT * FROM proveedores WHERE id = %s", (proveedor_id,))
+    if not proveedor:
+        flash('Proveedor no encontrado', 'error')
+        return redirect(url_for('listar_proveedores'))
+
+    proveedor = proveedor[0]
+    # Obtener componentes que suministra
+    componentes = db.execute_query(
+        """
+        SELECT c.*, cp.precio_proveedor, cp.tiempo_entrega_dias
+        FROM componente_proveedor cp
+        JOIN componentes c ON cp.componente_id = c.id
+        WHERE cp.proveedor_id = %s
+        ORDER BY c.nombre
+        """,
+        (proveedor_id,)
+    )
+    return render_template('proveedores/detalle.html', proveedor=proveedor, componentes=componentes or [])
+
+
+@app.route('/proveedores/editar/<int:proveedor_id>', methods=['GET', 'POST'])
+def editar_proveedor(proveedor_id):
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        contacto = request.form.get('contacto')
+        telefono = request.form.get('telefono')
+        email = request.form.get('email')
+        direccion = request.form.get('direccion')
+
+        query = "UPDATE proveedores SET nombre=%s, contacto=%s, telefono=%s, email=%s, direccion=%s WHERE id=%s"
+        params = (nombre, contacto, telefono, email, direccion, proveedor_id)
+        if db.execute_query(query, params):
+            flash('Proveedor actualizado', 'success')
+        else:
+            flash('Error al actualizar proveedor', 'error')
+
+        return redirect(url_for('listar_proveedores'))
+
+    proveedor = db.execute_query("SELECT * FROM proveedores WHERE id = %s", (proveedor_id,))
+    if proveedor:
+        return render_template('proveedores/editar.html', proveedor=proveedor[0])
+    else:
+        flash('Proveedor no encontrado', 'error')
+        return redirect(url_for('listar_proveedores'))
+
+
+@app.route('/proveedores/eliminar/<int:proveedor_id>', methods=['POST'])
+def eliminar_proveedor(proveedor_id):
+    query = "DELETE FROM proveedores WHERE id = %s"
+    if db.execute_query(query, (proveedor_id,)):
+        flash('Proveedor eliminado exitosamente', 'success')
+    else:
+        flash('Error al eliminar proveedor', 'error')
+    return redirect(url_for('listar_proveedores'))
+
+
+@app.route('/componentes/<int:componente_id>/proveedores/add', methods=['POST'])
+def add_proveedor_a_componente(componente_id):
+    proveedor_id = request.form.get('proveedor_id')
+    precio = request.form.get('precio_proveedor') or None
+    tiempo = request.form.get('tiempo_entrega_dias') or None
+
+    if not proveedor_id:
+        flash('Debes seleccionar un proveedor', 'error')
+        return redirect(url_for('ver_componente', componente_id=componente_id))
+
+    query = "INSERT INTO componente_proveedor (componente_id, proveedor_id, precio_proveedor, tiempo_entrega_dias) VALUES (%s, %s, %s, %s)"
+    params = (componente_id, proveedor_id, precio, tiempo)
+    res = db.execute_query(query, params)
+    if res:
+        flash('Proveedor vinculado al componente', 'success')
+    else:
+        flash('Error al vincular proveedor (¿ya existe?)', 'error')
+    return redirect(url_for('ver_componente', componente_id=componente_id))
+
+
+@app.route('/componentes/<int:componente_id>/proveedores/remove/<int:proveedor_id>', methods=['POST'])
+def remove_proveedor_de_componente(componente_id, proveedor_id):
+    query = "DELETE FROM componente_proveedor WHERE componente_id=%s AND proveedor_id=%s"
+    if db.execute_query(query, (componente_id, proveedor_id)):
+        flash('Proveedor desvinculado del componente', 'success')
+    else:
+        flash('Error al desvincular proveedor', 'error')
+    return redirect(url_for('ver_componente', componente_id=componente_id))
 
 
 if __name__ == '__main__':
